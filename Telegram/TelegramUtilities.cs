@@ -59,7 +59,7 @@ namespace Utilities.Telegram
 					row.Add(new InlineKeyboardButton() { Url = value, Text = array[i++] });
 				else if (value == INLINEKEYBOARD_PAY_BUTTON_VALUE)
 					row.Add(new InlineKeyboardButton() { Pay = true, Text = array[i++] });
-				else if (value == "")
+				else if (value == "" || value == null)
 				{
 					rows.Add(row);
 					row = new List<InlineKeyboardButton>();

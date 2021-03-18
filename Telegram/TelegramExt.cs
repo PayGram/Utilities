@@ -270,6 +270,7 @@ namespace Utilities.Telegram.Extentions
 			if (bot == null) return null;
 			if (desc == null) return null;
 			await bot.DeleteMessageIdAsync(desc, desc.DeleteAlsoMessageId);
+			desc.DeleteAlsoMessageId = 0;
 			int deleteNext = 0;
 			if (onlysend)
 			{
@@ -369,6 +370,7 @@ namespace Utilities.Telegram.Extentions
 		{
 			if (bot == null || string.IsNullOrEmpty(filename) || c == null) return false;
 			await bot.DeleteMessageIdAsync(c, c.DeleteAlsoMessageId);
+			c.DeleteAlsoMessageId = 0;
 			try
 			{
 				using (var stream = new FileStream(filename, FileMode.Open))
@@ -422,7 +424,7 @@ namespace Utilities.Telegram.Extentions
 			}
 			catch (Exception e)
 			{
-				log.Debug($"Bot: {bot.BotId}, chatId: {chatId} - Error DeleteMessageIdAsync", e);
+				log.Debug($"Bot: {bot.BotId}, chatId: {chatId}, msgId: {msgid} - Error DeleteMessageIdAsync", e);
 				return false;
 			}
 		}
