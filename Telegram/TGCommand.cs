@@ -79,8 +79,9 @@ namespace Utilities.Telegram
 		/// </summary>
 		/// <param name="text">The text to look for a command</param>
 		/// <param name="botName">If botName is specified, only commands containing this name will be returned. If it is null, all commands will be returned</param>
+		/// <param name="sep">The separator of the arguments of the command</param>
 		/// <returns>A TGCommand that represents the passed text</returns>
-		public static TGCommand Parse(string text, string botName = null)
+		public static TGCommand Parse(string text, string botName = null, char sep = PARAMS_SEP)
 		{
 			if (string.IsNullOrWhiteSpace(text)) return null;
 
@@ -92,8 +93,14 @@ namespace Utilities.Telegram
 			// /start p1_p2_p3
 
 			string[] commandParts = text.Split(' ');
-			if (commandParts.Length == 0 || commandParts.Length > 2)
+			if (commandParts.Length == 0 || (commandParts.Length > 2 && sep != ' '))
 				return null; // invalid telegram command
+
+			if (commandParts.Length > 2 && sep == ' ')
+			{
+				// the arguments have been splitted already, we re-merge them on the first argument
+				commandParts[1] = text.Substring(commandParts[0].Length + 1); // the / + the separator
+			}
 
 			// /start@botname  OR  /start
 			string commandPart = commandParts[0];
@@ -101,9 +108,9 @@ namespace Utilities.Telegram
 				return null; // comand not for us
 
 			// p1_p2_p3
-			string prmsPart = commandParts.Length == 2 ? commandParts[1] : null;
+			string prmsPart = commandParts.Length >= 2 ? commandParts[1] : null;
 			prmsPart = prmsPart.Base64Decode() ?? prmsPart; // is it base64-encoded
-			string[] prms = prmsPart?.Split(PARAMS_SEP);
+			string[] prms = prmsPart?.Split(sep);
 
 
 			int iofAt = text.IndexOf("@");
