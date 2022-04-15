@@ -7,7 +7,7 @@ namespace Utilities.Telegram
 		public const char PARAMS_SEP = '_';
 		public string[] Parameters { get; set; }
 		public CallbackQuery CallbackQuery { get; private set; }
-		public int FromId => CallbackQuery?.From?.Id ?? 0;
+		public long FromId => CallbackQuery?.From?.Id ?? 0;
 
 		public string FirstParameter => Parameters == null || Parameters.Length == 0 ? null : Parameters[0];
 		public bool HasParameters => Parameters != null && Parameters.Length > 0;
