@@ -23,8 +23,9 @@ namespace Utilities.Telegram.Extentions
         {
             return query.Id.ToString();
         }
-        public static long FromId(this Update upd)
+        public static long FromId(this Update? upd)
         {
+            if (upd == null) return -1;
             switch (upd.Type)
             {
                 case UpdateType.CallbackQuery:
@@ -43,102 +44,107 @@ namespace Utilities.Telegram.Extentions
                     return -1;
             }
         }
-        public static string FromUsernameOrFirstname(this Update upd)
+        public static string? FromUsernameOrFirstname(this Update? upd)
         {
+            if (upd == null) return null;
             switch (upd.Type)
             {
                 case UpdateType.CallbackQuery:
-                    return upd.CallbackQuery.From?.Username ?? upd.CallbackQuery.From?.FirstName;
+                    return upd.CallbackQuery?.From?.Username ?? upd.CallbackQuery?.From?.FirstName;
 
                 case UpdateType.Message:
-                    return upd.Message.From?.Username ?? upd.Message.From?.FirstName;
+                    return upd.Message?.From?.Username ?? upd.Message?.From?.FirstName;
 
                 case UpdateType.InlineQuery:
-                    return upd.InlineQuery.From?.Username ?? upd.InlineQuery.From?.FirstName;
+                    return upd.InlineQuery?.From?.Username ?? upd.InlineQuery?.From?.FirstName;
 
                 case UpdateType.PreCheckoutQuery:
-                    return upd.PreCheckoutQuery.From?.Username ?? upd.PreCheckoutQuery.From?.FirstName;
+                    return upd.PreCheckoutQuery?.From?.Username ?? upd.PreCheckoutQuery.From?.FirstName;
                 default:
                     return null;
             }
         }
-        public static string FromUsername(this Update upd)
+        public static string? FromUsername(this Update? upd)
         {
+            if (upd == null) return null;
             switch (upd.Type)
             {
                 case UpdateType.CallbackQuery:
-                    return upd.CallbackQuery.From?.Username;
+                    return upd.CallbackQuery?.From?.Username;
 
                 case UpdateType.Message:
-                    return upd.Message.From?.Username;
+                    return upd.Message?.From?.Username;
 
                 case UpdateType.InlineQuery:
-                    return upd.InlineQuery.From?.Username;
+                    return upd.InlineQuery?.From?.Username;
 
                 case UpdateType.PreCheckoutQuery:
-                    return upd.PreCheckoutQuery.From?.Username;
+                    return upd.PreCheckoutQuery?.From?.Username;
                 default:
                     return null;
             }
         }
-        public static string FromFirstname(this Update upd)
+        public static string? FromFirstname(this Update? upd)
         {
+            if (upd == null) return null;
             switch (upd.Type)
             {
                 case UpdateType.CallbackQuery:
-                    return upd.CallbackQuery.From?.FirstName;
+                    return upd.CallbackQuery?.From?.FirstName;
 
                 case UpdateType.Message:
-                    return upd.Message.From?.FirstName;
+                    return upd.Message?.From?.FirstName;
 
                 case UpdateType.InlineQuery:
-                    return upd.InlineQuery.From?.FirstName;
+                    return upd.InlineQuery?.From?.FirstName;
 
                 case UpdateType.PreCheckoutQuery:
-                    return upd.PreCheckoutQuery.From?.FirstName;
+                    return upd.PreCheckoutQuery?.From?.FirstName;
                 default:
                     return null;
             }
         }
-        public static User From(this Update upd)
+        public static User? From(this Update? upd)
         {
+            if (upd == null) return null;
             switch (upd.Type)
             {
                 case UpdateType.CallbackQuery:
-                    return upd.CallbackQuery.From;
+                    return upd.CallbackQuery?.From;
 
                 case UpdateType.Message:
-                    return upd.Message.From;
+                    return upd.Message?.From;
 
                 case UpdateType.InlineQuery:
-                    return upd.InlineQuery.From;
+                    return upd.InlineQuery?.From;
 
                 case UpdateType.PreCheckoutQuery:
-                    return upd.PreCheckoutQuery.From;
+                    return upd.PreCheckoutQuery?.From;
                 default:
                     return null;
             }
         }
-        public static string FromLanguage(this Update upd)
+        public static string? FromLanguage(this Update? upd)
         {
+            if (upd == null) return null;
             switch (upd.Type)
             {
                 case UpdateType.CallbackQuery:
-                    return upd.CallbackQuery.From?.LanguageCode;
+                    return upd.CallbackQuery?.From?.LanguageCode;
 
                 case UpdateType.Message:
-                    return upd.Message.From?.LanguageCode;
+                    return upd.Message?.From?.LanguageCode;
 
                 case UpdateType.InlineQuery:
-                    return upd.InlineQuery.From?.LanguageCode;
+                    return upd.InlineQuery?.From?.LanguageCode;
 
                 case UpdateType.PreCheckoutQuery:
-                    return upd.PreCheckoutQuery.From?.LanguageCode;
+                    return upd.PreCheckoutQuery?.From?.LanguageCode;
                 default:
                     return null;
             }
         }
-        public static async Task<Message> SendHtmlMessage(this TelegramBotClient bot, long chatId, string text, int replyToMsgId = 0, IReplyMarkup markup = null, CancellationToken ct = default(CancellationToken))
+        public static async Task<Message?> SendHtmlMessage(this ITelegramBotClient bot, long chatId, string? text, int replyToMsgId = 0, IReplyMarkup markup = null, CancellationToken ct = default(CancellationToken))
         {
             if (bot == null) return null;
             try
@@ -151,12 +157,12 @@ namespace Utilities.Telegram.Extentions
                 return null;
             }
         }
-        public static async Task<Message> SendPhotoAsync(this TelegramBotClient bot, long chatId, string caption, InputOnlineFile file, IReplyMarkup replyMarkup = null, CancellationToken ct = default(CancellationToken))
+        public static async Task<Message> SendPhotoAsync(this ITelegramBotClient bot, long chatId, string? caption, InputOnlineFile file, IReplyMarkup replyMarkup = null, CancellationToken ct = default(CancellationToken))
         {
             if (bot == null) return null;
             return await bot.SendPhotoAsync(GetChat(bot, chatId), caption, file, replyMarkup, ct);
         }
-        public static async Task<Message> SendPhotoAsync(this TelegramBotClient bot, TelegramChatStatusDesc desc, string caption, InputOnlineFile file, IReplyMarkup replyMarkup = null, CancellationToken ct = default(CancellationToken))
+        public static async Task<Message?> SendPhotoAsync(this ITelegramBotClient bot, TelegramChatStatusDesc desc, string? caption, InputOnlineFile file, IReplyMarkup replyMarkup = null, CancellationToken ct = default(CancellationToken))
         {
             if (bot == null) return null;
             if (desc == null) return null;
@@ -182,34 +188,34 @@ namespace Utilities.Telegram.Extentions
                 return null;
             }
         }
-        public static async Task<Message> SendInvoiceAsync(this TelegramBotClient bot, long chatId, string title, string description, string payload, string providertoken
-            , string startParameter
-            , string currency
+        public static async Task<Message?> SendInvoiceAsync(this ITelegramBotClient bot, long chatId, string? title, string? description, string? payload, string? providertoken
+            , string? startParameter
+            , string? currency
             , IEnumerable<LabeledPrice> prices
-            , string providerData = null
+            , string? providerData = null
             , InlineKeyboardMarkup replyMarkup = null
             , bool needPhone = false
             , bool needEmail = false
             , bool needShippingAddress = false
             , bool needName = false
-            , string photoUrl = null
+            , string? photoUrl = null
         , CancellationToken ct = default(CancellationToken))
         {
             if (bot == null) return null;
             return await bot.SendInvoiceAsync(GetChat(bot, chatId), title, description, payload, providertoken, startParameter,
                 currency, prices, providerData, replyMarkup, needPhone, needEmail, needShippingAddress, needName, photoUrl, ct);
         }
-        public static async Task<Message> SendInvoiceAsync(this TelegramBotClient bot, TelegramChatStatusDesc c, string title, string description, string payload, string providertoken
-            , string startParameter
-            , string currency
+        public static async Task<Message?> SendInvoiceAsync(this ITelegramBotClient bot, TelegramChatStatusDesc c, string? title, string? description, string? payload, string? providertoken
+            , string? startParameter
+            , string? currency
             , IEnumerable<LabeledPrice> prices
-            , string providerData = null
+            , string? providerData = null
             , InlineKeyboardMarkup replyMarkup = null
             , bool needPhone = false
             , bool needEmail = false
             , bool needShippingAddress = false
             , bool needName = false
-            , string photoUrl = null
+            , string? photoUrl = null
             , CancellationToken ct = default(CancellationToken))
         {
             if (bot == null) return null;
@@ -231,7 +237,7 @@ namespace Utilities.Telegram.Extentions
                 //}
             }
 
-            if(c.ChatId?.Identifier==null)
+            if (c.ChatId?.Identifier == null)
             {
                 log.Warn($"{c},{c.ChatId} has null identifier");
             }
@@ -253,6 +259,10 @@ namespace Utilities.Telegram.Extentions
                            , needShippingAddress: needShippingAddress
                            , needName: needName
                            , photoUrl: photoUrl);
+
+                if (invoice == null)
+                    return null;
+
                 c.LastMessageId = invoice.MessageId;
                 c.DeleteMessage = true; //next time this message must be deleted, because we cant edit an invoice message
                 return invoice;
@@ -264,12 +274,12 @@ namespace Utilities.Telegram.Extentions
                 return null;
             }
         }
-        public static async Task<Message> SendOrUpdateMessage(this TelegramBotClient bot, long chatId, string text, IReplyMarkup replyMarkup = null, bool onlysend = false, CancellationToken ct = default(CancellationToken))
+        public static async Task<Message?> SendOrUpdateMessage(this ITelegramBotClient bot, long chatId, string? text, IReplyMarkup replyMarkup = null, bool onlysend = false, CancellationToken ct = default(CancellationToken))
         {
             if (bot == null) return null;
             return await bot.SendOrUpdateMessage(GetChat(bot, chatId), text, replyMarkup, onlysend, ct);
         }
-        public static async Task<Message> SendOrUpdateMessage(this TelegramBotClient bot, TelegramChatStatusDesc desc, string text, IReplyMarkup replyMarkup = null, bool onlysend = false, CancellationToken ct = default(CancellationToken))
+        public static async Task<Message?> SendOrUpdateMessage(this ITelegramBotClient bot, TelegramChatStatusDesc desc, string? text, IReplyMarkup replyMarkup = null, bool onlysend = false, CancellationToken ct = default(CancellationToken))
         {
             if (bot == null) return null;
             if (desc == null) return null;
@@ -296,27 +306,22 @@ namespace Utilities.Telegram.Extentions
                         //System.Diagnostics.Debug.WriteLine($"2. msg to: {desc.ChatId.Identifier}, {text}");
                         return msgout;
                     }
-                    //catch (MessageIsNotModifiedException e)
-                    //{
-                    //    return null;
-                    //}
-                    catch //(Exception ex)
+                    catch (ApiRequestException ar)
                     {
-                        // todo: check in case of message not modified
+                        if (ar.Message.Contains("message is not modified"))
+                            return null;
+                        else
+                            log.Debug($"{desc}", ar);
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Debug($"{desc}", ex);
                         desc.DeleteMessage = true;
                     }
                 if (desc.DeleteMessage)
                 {
                     if (await bot.DeleteMessageIdAsync(desc, editMessageId))
                         desc.AnswerToMessageId = 0;
-                    //try
-                    //{
-                    //	await bot.DeleteMessageAsync(desc.ChatId, editMessageId, ct);
-                    //	desc.AnswerToMessageId = 0;
-                    //}
-                    //catch //(Exception exx)
-                    //{
-                    //}
                     desc.DeleteMessage = false;
                 }
             }
@@ -366,12 +371,12 @@ namespace Utilities.Telegram.Extentions
             desc.AnswerToMessageId = m.MessageId;
             desc.DeleteMessage = true;
         }
-        public static async Task<bool> SendPhoto(this TelegramBotClient bot, long chatId, string filename, string caption, IReplyMarkup markup = null)
+        public static async Task<bool> SendPhoto(this ITelegramBotClient bot, long chatId, string? filename, string? caption, IReplyMarkup markup = null)
         {
             if (bot == null) return false;
             return await bot.SendPhoto(GetChat(bot, chatId), filename, caption, markup);
         }
-        public static async Task<bool> SendPhoto(this TelegramBotClient bot, TelegramChatStatusDesc c, string filename, string caption, IReplyMarkup markup = null)
+        public static async Task<bool> SendPhoto(this ITelegramBotClient bot, TelegramChatStatusDesc c, string? filename, string? caption, IReplyMarkup markup = null)
         {
             if (bot == null || string.IsNullOrEmpty(filename) || c == null) return false;
             await bot.DeleteMessageIdAsync(c, c.DeleteAlsoMessageId);
@@ -391,7 +396,7 @@ namespace Utilities.Telegram.Extentions
                 return false;
             }
         }
-        public static async Task<string> DownloadPhotoLocalAsync(this TelegramBotClient bot, string botToken, string fileId, string dirDest)
+        public static async Task<string?> DownloadPhotoLocalAsync(this ITelegramBotClient bot, string? botToken, string? fileId, string? dirDest)
         {
             if (string.IsNullOrEmpty(fileId) || string.IsNullOrEmpty(botToken) || bot == null) return null;
             dirDest = dirDest ?? "";
@@ -419,7 +424,7 @@ namespace Utilities.Telegram.Extentions
                 return null;
             }
         }
-        public static async Task<bool> DeleteMessageIdAsync(this TelegramBotClient bot, long chatId, int msgid)
+        public static async Task<bool> DeleteMessageIdAsync(this ITelegramBotClient bot, long chatId, int msgid)
         {
             if (bot == null || msgid <= 0) return false;
             try
@@ -433,17 +438,30 @@ namespace Utilities.Telegram.Extentions
                 return false;
             }
         }
-        public static async Task<bool> DeleteMessageIdAsync(this TelegramBotClient bot, TelegramChatStatusDesc desc, int msgid)
+        public static async Task<bool> DeleteMessageIdAsync(this ITelegramBotClient bot, TelegramChatStatusDesc desc, int msgid)
         {
             if (desc.ChatId?.Identifier == null)
                 log.Debug($"{desc}, {desc.ChatId} has null chatId.Identifier");
             if (bot == null || desc == null || msgid <= 0 || desc.ChatId?.Identifier == null) return false;
             return await bot.DeleteMessageIdAsync((long)desc.ChatId.Identifier, msgid);
         }
+        public static async Task<bool> AnswerCallbackQueryNoThrowAsync(this ITelegramBotClient bot, string callBackQueryId, string message, bool showAlert = false, string url = null, int cacheTime = 0, CancellationToken ct = default(CancellationToken))
+        {
+            try
+            {
+                await bot.AnswerCallbackQueryAsync(callBackQueryId, message, false, url, cacheTime, ct);
+                return true;
+            }
+            catch (Exception e)
+            {
+                log.Debug($"Answering callBackQueryId: {callBackQueryId}", e);
+                return false;
+            }
+        }
 
         readonly static Dictionary<long, Dictionary<long, TelegramChatStatusDesc>> botsAndChats = new Dictionary<long, Dictionary<long, TelegramChatStatusDesc>>();
         readonly static object sync = new object();
-        static TelegramChatStatusDesc GetChat(TelegramBotClient bot, long chatId)
+        static TelegramChatStatusDesc? GetChat(ITelegramBotClient bot, long chatId)
         {
             TelegramChatStatusDesc chat;
             if (bot?.BotId == null)
