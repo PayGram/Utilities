@@ -16,14 +16,32 @@ namespace Utilities.General
 			return dtDateTime;
 		}
 		/// <summary>
-		/// Gets the next DateTime when a loop starting at startAtMinute and repeating every recurEveryMinutes will recurr
+		/// Gets the next DateTime when a loop starting at startAtMinute of every hour and repeating every recurEveryMinutes will recur
 		/// </summary>
 		/// <param name="startAtMinute">The first minute in the hour when the loop happens</param>
-		/// <param name="recurEveryMinutes">How frequently (in minutes) the loop recurrs</param>
-		/// <returns>The next time when the loop will recurr</returns>
+		/// <param name="recurEveryMinutes">How frequently (in minutes) the loop recurs</param>
+		/// <returns>The next time when the loop will recur</returns>
 		public static DateTime NextTime(this DateTime now, int startAtMinute, int recurEveryMinutes)
 		{
+			if (startAtMinute < 0 || startAtMinute > 59) throw new ArgumentException("startAtMinute must be >= 0 and <= 59");
+			if (recurEveryMinutes <= 0 || recurEveryMinutes > 60) throw new ArgumentException("recurEveryMinutes must be >0 and <=60");
+			if (60 % recurEveryMinutes != 0) throw new ArgumentException("60 must be divisible by recuverEveryMinutes");
+
+			//DateTime firstTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, startAtMinute, 0, now.Kind);
+			//if (firstTime > now)
+			//	firstTime = firstTime.AddHours(-1);
+			////DateTime prevTime = firstTme;
+			//DateTime nextTime = firstTime.AddMinutes(recurEveryMinutes);
+			//while (nextTime <= now)
+			//{
+			//	nextTime = nextTime.AddMinutes(recurEveryMinutes);
+			//}
+			//return nextTime;
+
+			//same as the above code but no loop
 			DateTime hourBegin = new DateTime(now.Year, now.Month, now.Day, now.Hour, startAtMinute, 0);
+			if (hourBegin > now)
+				hourBegin = hourBegin.AddHours(-1);
 			var sinceHour = now - hourBegin;
 			int millisSinceHour = (int)sinceHour.TotalMilliseconds;
 			int intervalMillis = recurEveryMinutes * 60 * 1000;
