@@ -17,19 +17,19 @@ namespace Utilities.Http.Extentions
 			if (handler == null) throw new ArgumentNullException("handler cannot be null");
 			var field = handler.GetType().GetField("_startRequest", BindingFlags.NonPublic | BindingFlags.Instance); // Fieldname has a _ due to being private
 			if (field == null)
-				throw new Exception($"Field _startRequest not found in handler type {handler.GetType()}");
+				throw new ArgumentNullException($"Field _startRequest not found in handler type {handler.GetType()}");
 			var startRequest = field.GetValue(handler) as Action<object>;
 			if (startRequest == null)
-				throw new Exception("startRequest value is null");
+				throw new ArgumentNullException("startRequest value is null");
 
 			Action<object> newStartRequest = obj =>
 			{
 				var webReqField = obj.GetType().GetField("webRequest", BindingFlags.NonPublic | BindingFlags.Instance);
 				if (webReqField == null)
-					throw new Exception($"webRequest is not set on type {obj.GetType()}");
+					throw new ArgumentNullException($"webRequest is not set on type {obj.GetType()}");
 				var webRequest = webReqField.GetValue(obj) as HttpWebRequest;
 				if (webRequest == null)
-					throw new Exception($"webRequest is null");
+					throw new ArgumentNullException($"webRequest is null");
 				webRequest.ServicePoint.BindIPEndPointDelegate = new BindIPEndPoint(biep);
 				startRequest(obj); //call original action
 			};
