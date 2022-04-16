@@ -30,13 +30,14 @@ namespace Utilities.Localization.Extentions
                 throw new InvalidOperationException("Set LocalizationExtentions.ResourceManager before calling this method");
             return Translate(mng, str, culture);
         }
-        public static string? TranslateString(this ResourceManager? rscmng, CultureInfo? culture, string? str, params object[] args)
+        public static string? TranslateString(this ResourceManager? rscmng, CultureInfo? culture, string? str, params object?[] args)
         {
+            if (args == null) args = Array.Empty<object>();
             if (rscmng == null || culture == null || str == null || string.IsNullOrWhiteSpace(str))
-                return culture == null ? str : str?.Format(culture, args);
+                return culture == null ? str : str?.Format(culture, args!);
             var transl = rscmng.GetString(str, culture);
             if (string.IsNullOrWhiteSpace(transl)) transl = str;
-            return transl.Format(culture, args);// string.Format(rscmng.GetString(str, culture), arguments) ?? str;
+            return transl.Format(culture, args!);// string.Format(rscmng.GetString(str, culture), arguments) ?? str;
         }
         public static string? Translate(this string str, CultureInfo culture, params object[] arguments)
         {
