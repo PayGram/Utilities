@@ -10,7 +10,7 @@ namespace Utilities.Telegram.Extentions
         /// <summary>
         /// The user id this TelegramChatStatus belongs to
         /// </summary>
-        //public long UserTid { get; set; }
+        public long UserTid => ChatId?.Identifier ?? 0;
         /// <summary>
         /// The most recent message id sent by the bot
         /// </summary>
