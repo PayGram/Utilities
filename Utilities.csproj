@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,5 +10,9 @@
     <PackageReference Include="log4net" Version="2.0.14" />
     <PackageReference Include="Telegram.Bot" Version="17.0.0" />
   </ItemGroup>
-
+	<PropertyGroup>
+		<RepositoryUrl>https://github.com/PayGram/Utilities</RepositoryUrl>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Version>1.0.1</Version>
+	</PropertyGroup>
 </Project>

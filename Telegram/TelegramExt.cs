@@ -406,7 +406,7 @@ namespace Utilities.Telegram.Extentions
                 var file = await bot.GetFileAsync(fileId);
 
                 FileInfo fiServer = new FileInfo(file.FilePath);
-                dirDest += $"\\{fiServer.Name}";
+                dirDest += $"\\{DateTime.UtcNow.ToFileTimeUtc()}{fiServer.Name}";
                 FileInfo fi = new FileInfo(dirDest);
                 if (Directory.Exists(fi.DirectoryName) == false)
                     Directory.CreateDirectory(fi.DirectoryName);
