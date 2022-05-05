@@ -244,17 +244,17 @@ namespace Utilities.Telegram.Extentions
 
             try
             {
-                var invoice = await bot.SendInvoiceAsync((long)c.ChatId.Identifier
-                           , title
-                           , description
-                           , payload
-                           , providertoken
-                           , startParameter
-                           , currency
-                           , prices
-                           , providerData
+                var invoice = await bot.SendInvoiceAsync(c.ChatId.Identifier ?? 0
+                           , title: title
+                           , description: description
+                           , payload: payload
+                           , providerToken: providertoken
+                           , startParameter: startParameter
+                           , currency: currency
+                           , prices: prices
+                           , providerData: providerData
                            , replyMarkup: replyMarkup
-                           , needPhone: needPhone
+                           , needPhoneNumber: needPhone
                            , needEmail: needEmail
                            , needShippingAddress: needShippingAddress
                            , needName: needName
