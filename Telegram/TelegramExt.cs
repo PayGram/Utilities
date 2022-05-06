@@ -434,7 +434,7 @@ namespace Utilities.Telegram.Extentions
             }
             catch (Exception e)
             {
-                log.Debug($"Bot: {bot.BotId}, chatId: {chatId}, msgId: {msgid} - Error DeleteMessageIdAsync", e);
+                log.Debug($"Bot: {bot.BotId}, chatId: {chatId}, msgId: {msgid}. last msg Id: {GetChat(bot, chatId)?.LastMessageId} - Error DeleteMessageIdAsync", e);
                 return false;
             }
         }
