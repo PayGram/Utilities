@@ -1,4 +1,7 @@
-﻿namespace Utilities.General
+﻿using System.ComponentModel.Design;
+using System.Runtime.CompilerServices;
+
+namespace Utilities.General
 {
 	public static class GeneralUtilities
 	{
@@ -158,6 +161,25 @@
 				res -= (decimal)add;
 			}
 			return res;
+		}
+		public static bool IsValidEmail(string email)
+		{
+			if (string.IsNullOrWhiteSpace(email)) return false;
+			var trimmedEmail = email.Trim();
+
+			if (trimmedEmail.EndsWith("."))
+			{
+				return false; // suggested by @TK-421
+			}
+			try
+			{
+				var addr = new System.Net.Mail.MailAddress(email);
+				return addr.Address == trimmedEmail;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 	}
 }
