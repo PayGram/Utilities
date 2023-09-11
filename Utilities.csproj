@@ -12,9 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="CurrenciesLib">
-	    <HintPath>..\CurrenciesLib\bin\$(Configuration)\net6.0\CurrenciesLib.dll</HintPath>
-	  </Reference>
+	  <ProjectReference Include="..\CurrenciesLib\CurrenciesLib.csproj" />
 	</ItemGroup>
 	<PropertyGroup>
 		<RepositoryUrl>https://github.com/PayGram/Utilities</RepositoryUrl>
