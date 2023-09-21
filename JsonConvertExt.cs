@@ -59,6 +59,6 @@ namespace Utilities.String.Json.Extentions
 			}
 			catch { return default; }
 		}
-		
+
 	}
 }
