@@ -109,7 +109,7 @@ namespace Utilities.Telegram
 
 			// p1_p2_p3
 			string prmsPart = commandParts.Length >= 2 ? commandParts[1] : null;
-			prmsPart = prmsPart.Base64Decode() ?? prmsPart; // is it base64-encoded
+			prmsPart = prmsPart?.Base64Decode() ?? prmsPart; // is it base64-encoded
 			string[] prms = prmsPart?.Split(sep);
 
 

@@ -14,6 +14,7 @@ namespace Utilities.String.Extentions
 		}
 		public static string Base64Decode(this string base64EncodedData)
 		{
+			if (string.IsNullOrWhiteSpace(base64EncodedData)) return null;
 			try
 			{
 				var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
