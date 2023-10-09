@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -165,6 +167,30 @@ namespace Utilities.Telegram
 		{
 			if (valuesLabels == null) return null;
 			return MakeReplyKeyboard(perRow, resize, selective, valuesLabels.SelectMany(x => new[] { x.Key, x.Value }).ToArray());
+		}
+		public static string? CreateLinkToUser(long tid, string? username = null, string? firstName = null)
+		{
+			if (tid == 0 && username == null) return null;
+
+			StringBuilder sb = new();
+			if (tid != 0)
+				sb.Append($"<a href=\"tg://user?id={tid}\">");
+
+			if (username != null)
+			{
+				sb.Append("@");
+				sb.Append(username);
+				if (firstName != null)
+					sb.Append(" - ");
+			}
+			if (firstName != null) 
+				sb.Append(firstName);
+			if (username == null && firstName == null)
+				sb.Append("anonymous");
+			if (tid != 0)
+				sb.Append("</a>");
+			return sb.ToString();
+			//$"<a href=\"tg://user?id={TId}\">{(string.IsNullOrWhiteSpace(_user?.UsernameOrFirstName) ? (TId == 0 ? "anonymous" : TId.ToString()) : _user.UsernameOrFirstName)}</a>"
 		}
 	}
 }
