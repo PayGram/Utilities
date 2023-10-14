@@ -445,11 +445,12 @@ namespace Utilities.Telegram.Extentions
             if (bot == null || desc == null || msgid <= 0 || desc.ChatId?.Identifier == null) return false;
             return await bot.DeleteMessageIdAsync((long)desc.ChatId.Identifier, msgid);
         }
-        public static async Task<bool> AnswerCallbackQueryNoThrowAsync(this ITelegramBotClient bot, string callBackQueryId, string message, bool showAlert = false, string url = null, int cacheTime = 0, CancellationToken ct = default(CancellationToken))
+        public static async Task<bool> AnswerCallbackQueryNoThrowAsync(this ITelegramBotClient bot, string? callBackQueryId, string? message, bool showAlert = false, string? url = null, int cacheTime = 0, CancellationToken ct = default)
         {
+            if (string.IsNullOrWhiteSpace(callBackQueryId)) return false;
             try
             {
-                await bot.AnswerCallbackQueryAsync(callBackQueryId, message, false, url, cacheTime, ct);
+                await bot.AnswerCallbackQueryAsync(callBackQueryId, message, showAlert, url, cacheTime, ct);
                 return true;
             }
             catch (Exception e)
