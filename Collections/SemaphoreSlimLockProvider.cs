@@ -37,7 +37,7 @@ public class SemaphoreSlimLockProvider<T> : ILockProvider<T> where T : notnull
 		await sem.WaitAsync();
 	}
 
-	public bool Release(T elementToLock, bool remove = true)
+	public bool Release(T elementToLock)
 	{
 		SemaphoreSlimThCount? sem = _lockDictionary.GetValueOrDefault(elementToLock);
 		if (sem == null) return false;
@@ -46,7 +46,7 @@ public class SemaphoreSlimLockProvider<T> : ILockProvider<T> where T : notnull
 		{
 			sem.WaitingThreads--;
 			sem.Release();
-			if (remove || sem.WaitingThreads == 0)
+			if (sem.WaitingThreads == 0)
 			{
 				_lockDictionary.Remove(elementToLock, out _);
 			}

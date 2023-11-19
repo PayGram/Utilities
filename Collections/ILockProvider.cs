@@ -4,6 +4,6 @@
 	{
 		void Wait(T elementToLock);
 		Task WaitAsync(T elementToLock);
-		bool Release(T elementToLock, bool remove);
+		bool Release(T elementToLock);
 	}
 }
