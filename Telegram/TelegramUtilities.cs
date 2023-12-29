@@ -168,6 +168,13 @@ namespace Utilities.Telegram
 			if (valuesLabels == null) return null;
 			return MakeReplyKeyboard(perRow, resize, selective, valuesLabels.SelectMany(x => new[] { x.Key, x.Value }).ToArray());
 		}
+		/// <summary>
+		/// returns a link with the html syntax <a href="">username or firstname</a>
+		/// </summary>
+		/// <param name="tid"></param>
+		/// <param name="username"></param>
+		/// <param name="firstName"></param>
+		/// <returns></returns>
 		public static string? CreateLinkToUser(long tid, string? username = null, string? firstName = null)
 		{
 			if (tid == 0 && username == null) return null;
@@ -183,7 +190,7 @@ namespace Utilities.Telegram
 				if (firstName != null)
 					sb.Append(" - ");
 			}
-			if (firstName != null) 
+			if (firstName != null)
 				sb.Append(firstName);
 			if (username == null && firstName == null)
 				sb.Append("anonymous");
@@ -191,6 +198,15 @@ namespace Utilities.Telegram
 				sb.Append("</a>");
 			return sb.ToString();
 			//$"<a href=\"tg://user?id={TId}\">{(string.IsNullOrWhiteSpace(_user?.UsernameOrFirstName) ? (TId == 0 ? "anonymous" : TId.ToString()) : _user.UsernameOrFirstName)}</a>"
+		}
+		/// <summary>
+		/// returns the link only
+		/// </summary>
+		/// <param name="tid"></param>
+		/// <returns></returns>
+		public static string CreateLinkToUser(long tid)
+		{
+			return $"tg://user?id={tid}";
 		}
 	}
 }
