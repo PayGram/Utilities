@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 
 namespace Utilities.String.Extentions
 {
@@ -100,7 +102,7 @@ namespace Utilities.String.Extentions
 			var source = new StringBuilder();
 			if (addChars)
 			{
-				source.Append( digitsSource);
+				source.Append(digitsSource);
 				if (removeZeroAndO == false) source.Append(o);
 			}
 
@@ -121,5 +123,7 @@ namespace Utilities.String.Extentions
 			}
 			return sb.ToString();
 		}
+		public static string HtmlEncode(this string text) => HttpUtility.HtmlEncode(text);
+		public static string HtmlDecode(this string text) => HttpUtility.HtmlDecode(text);
 	}
 }
