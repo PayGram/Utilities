@@ -3,6 +3,7 @@ using System.Data;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Utilities.String.Extentions
@@ -125,5 +126,14 @@ namespace Utilities.String.Extentions
 		}
 		public static string HtmlEncode(this string text) => HttpUtility.HtmlEncode(text);
 		public static string HtmlDecode(this string text) => HttpUtility.HtmlDecode(text);
+		/// <summary>
+		/// Be aware that this solution has its own flaw. See Remove HTML tags in String for more information (especially the comments of 'Mark E. Haase'/@mehaase)
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static string StripHTML(this string input)
+		{
+			return Regex.Replace(input, "<.*?>", string.Empty);
+		}
 	}
 }
