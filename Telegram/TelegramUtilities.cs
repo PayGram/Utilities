@@ -42,7 +42,7 @@ namespace Utilities.Telegram
 		/// <param name="perRow">How many buttons on one row, pass 0 to auto detect</param>
 		/// <param name="switchInline">0: will not switch inline, 1: inline same chat, 2: inline private chat</param>
 		/// <returns>The InlineKeyboardMarkup to send to telegram</returns>
-		public static InlineKeyboardMarkup MakeKeyboard(int perRow, params string[] valuesLabels)
+		public static InlineKeyboardMarkup? MakeKeyboard(int perRow, params string[] valuesLabels)
 		{
 			if (valuesLabels == null) return null;
 			perRow = perRow == 0 ? int.MaxValue : perRow;
