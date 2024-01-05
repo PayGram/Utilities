@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Data;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Utilities.String.Extentions
 {
@@ -82,21 +86,35 @@ namespace Utilities.String.Extentions
 		/// <param name="caseSensitive"></param>
 		/// <returns>A random string of the requested length</returns>
 		/// <exception cref="InvalidOperationException">When addNumbers and addChars are false</exception>
-		public static string GetRandomString(int len, bool addNumbers = true, bool addChars = true, bool caseSensitive = false)
+		public static string GetRandomString(int len
+			, bool addNumbers = true
+			, bool addChars = true
+			, bool caseSensitive = false
+			, bool removeZeroAndO = false)
 		{
-			const string numbersSource = "0123456789";
-			const string digitsSource = "abcdefghjkilmnopqrstuvwxyz";
+			const string numbersSource = "123456789";
+			const string digitsSource = "abcdefghjkilmnpqrstuvwxyz";
+			const string zero = "0";
+			const string o = "o";
 
 			if (addNumbers == false && addChars == false)
 				throw new InvalidOperationException("addChars or addNumbers must be true");
 
-			string source = string.Empty;
+			var source = new StringBuilder();
 			if (addChars)
-				source += digitsSource;
+			{
+				source.Append(digitsSource);
+				if (removeZeroAndO == false) source.Append(o);
+			}
+
 			if (caseSensitive)
-				source += source.ToUpper();
+				source.Append(source.ToString().ToUpper());
+
 			if (addNumbers)
-				source += numbersSource;
+			{
+				source.Append(numbersSource);
+				if (removeZeroAndO == false) source.Append(zero);
+			}
 
 			if (len < 0) return "";
 			StringBuilder sb = new StringBuilder();
@@ -105,6 +123,17 @@ namespace Utilities.String.Extentions
 				sb.Append(source[RandomNumberGenerator.GetInt32(source.Length)]);
 			}
 			return sb.ToString();
+		}
+		public static string HtmlEncode(this string text) => HttpUtility.HtmlEncode(text);
+		public static string HtmlDecode(this string text) => HttpUtility.HtmlDecode(text);
+		/// <summary>
+		/// Be aware that this solution has its own flaw. See Remove HTML tags in String for more information (especially the comments of 'Mark E. Haase'/@mehaase)
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static string StripHTML(this string input)
+		{
+			return Regex.Replace(input, "<.*?>", string.Empty);
 		}
 	}
 }

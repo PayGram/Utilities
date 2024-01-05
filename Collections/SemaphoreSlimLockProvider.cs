@@ -1,70 +1,56 @@
 ﻿using System.Collections.Concurrent;
+using Utilities.Collections;
 
-namespace Utilities.Collections
+public class SemaphoreSlimThCount : SemaphoreSlim
 {
-	public class SemaphoreSlimThCount : SemaphoreSlim
+	public int MaxCount { get; private set; }
+	public int WaitingThreads { get; set; } = 0;
+	internal object Lock { get; private set; } = new object();
+	public SemaphoreSlimThCount(int initialCount, int maxCount) : base(initialCount, maxCount)
 	{
-		public SemaphoreSlimThCount(int initialCount, int maxCount) : base(initialCount, maxCount)
-		{
-		}
-		public int WaitingThreads { get; set; } = 0;
-
+		MaxCount = maxCount;
 	}
-	public class SemaphoreSlimLockProvider<T> : ILockProvider<T> where T : notnull
+}
+public class SemaphoreSlimLockProvider<T> : ILockProvider<T> where T : notnull
+{
+	private static readonly ConcurrentDictionary<T, SemaphoreSlimThCount> _lockDictionary = new();
+
+	public void Wait(T elementToLock)
 	{
-		private static readonly ConcurrentDictionary<T, SemaphoreSlimThCount> _lockDictionary = new();
-		object syncObj = new();
-
-		public void Wait(T elementToLock)
+		SemaphoreSlimThCount sem = _lockDictionary.GetOrAdd(elementToLock, new SemaphoreSlimThCount(1, 1));
+		lock (sem.Lock)
 		{
-			SemaphoreSlimThCount? sem;
-			lock (syncObj)
-			{
-				if (_lockDictionary.TryGetValue(elementToLock, out sem))
-					sem.WaitingThreads++;
-				else
-				{
-					sem = new SemaphoreSlimThCount(1, 1);
-					_lockDictionary.TryAdd(elementToLock, sem);
-				}
-			}
-			sem.Wait();
+			_lockDictionary.TryAdd(elementToLock, sem); // this is needed because the element just gotten might have removed concurrently by the release statement
+			sem.WaitingThreads++;
 		}
+		sem.Wait();
+	}
 
-		public async Task WaitAsync(T elementToLock)
+	public async Task WaitAsync(T elementToLock)
+	{
+		SemaphoreSlimThCount sem = _lockDictionary.GetOrAdd(elementToLock, new SemaphoreSlimThCount(1, 1));
+		lock (sem.Lock)
 		{
-			SemaphoreSlimThCount? sem;
-			lock (syncObj)
-			{
-				if (_lockDictionary.TryGetValue(elementToLock, out sem))
-					sem.WaitingThreads++;
-				else
-				{
-					sem = new SemaphoreSlimThCount(1, 1);
-					_lockDictionary.TryAdd(elementToLock, sem);
-				}
-			}
-			await sem.WaitAsync();
+			_lockDictionary.TryAdd(elementToLock, sem); // this is needed because the element just gotten might have removed concurrently by the release statement
+			sem.WaitingThreads++;
 		}
+		await sem.WaitAsync();
+	}
 
-		public bool Release(T elementToLock, bool remove = true)
+	public bool Release(T elementToLock)
+	{
+		SemaphoreSlimThCount? sem = _lockDictionary.GetValueOrDefault(elementToLock);
+		if (sem == null) return false;
+
+		lock (sem.Lock)
 		{
-			SemaphoreSlimThCount? sem;
-			lock (syncObj)
-			{
-				if (_lockDictionary.TryGetValue(elementToLock, out sem))
-				{
-					sem.WaitingThreads--;
-					if (sem.WaitingThreads == 0)
-						_lockDictionary.Remove(elementToLock, out _);
-				}
-				else
-				{
-					return false;
-				}
-			}
+			sem.WaitingThreads--;
 			sem.Release();
-			return true;
+			if (sem.WaitingThreads == 0)
+			{
+				_lockDictionary.Remove(elementToLock, out _);
+			}
 		}
+		return true;
 	}
 }

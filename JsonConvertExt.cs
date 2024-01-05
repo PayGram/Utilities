@@ -9,7 +9,8 @@ namespace Utilities.String.Json.Extentions
 		public static string? SerializeIgnoreAndPopulate<T>(this T obj)
 		{
 			if (obj == null) return null;
-			return JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate });
+			var settings = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate };
+			return JsonConvert.SerializeObject(obj, Formatting.None, settings);
 		}
 
 		public static string? Stringify<T>(this T obj)

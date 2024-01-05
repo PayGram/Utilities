@@ -48,5 +48,24 @@ namespace Utilities.Telegram
 			=> keyboard.Add(new KeyValuePair<string, string>($"{TelegramUtilities.SwitchInlineQuery_TOKEN}{TGCallBack.GetData(callbackData)}", text));
 		public void AddSwitchInlineQueryCurrentChat(string text, params string[] callbackData)
 			=> keyboard.Add(new KeyValuePair<string, string>($"{TelegramUtilities.SwitchInlineQueryCurrentChat_TOKEN}{TGCallBack.GetData(callbackData)}", text));
+		/// <summary>
+		/// Gets if this TelegramKeyboard contains the same keys/value of the passed object as well as the other properties
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public override bool Equals(object? obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (obj is not TelegramKeyboard comp) return false;
+
+			return Selective == comp.Selective
+					&& Resize == comp.Resize
+					&& ButtonsPerRow == comp.ButtonsPerRow
+					&& comp.keyboard.SequenceEqual(keyboard);
+		}
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(Selective, Resize, ButtonsPerRow, string.Join("", keyboard.SelectMany(x => new[] { x.Key, x.Value })));
+		}
 	}
 }
