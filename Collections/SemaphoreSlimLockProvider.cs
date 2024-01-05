@@ -2,33 +2,69 @@
 
 namespace Utilities.Collections
 {
-    public class SemaphoreSlimLockProvider<T> : ILockProvider<T> where T : notnull
-    {
-        private static readonly ConcurrentDictionary<T, SemaphoreSlim> _lockDictionary = new();
+	public class SemaphoreSlimThCount : SemaphoreSlim
+	{
+		public SemaphoreSlimThCount(int initialCount, int maxCount) : base(initialCount, maxCount)
+		{
+		}
+		public int WaitingThreads { get; set; } = 0;
 
-        public void Wait(T elementToLock)
-        {
-            _lockDictionary.GetOrAdd(
-                elementToLock, new SemaphoreSlim(1, 1)).Wait();
-        }
+	}
+	public class SemaphoreSlimLockProvider<T> : ILockProvider<T> where T : notnull
+	{
+		private static readonly ConcurrentDictionary<T, SemaphoreSlimThCount> _lockDictionary = new();
+		object syncObj = new();
 
-        public async Task WaitAsync(T elementToLock)
-        {
-            await _lockDictionary.GetOrAdd(
-                elementToLock, new SemaphoreSlim(1, 1)).WaitAsync();
-        }
+		public void Wait(T elementToLock)
+		{
+			SemaphoreSlimThCount? sem;
+			lock (syncObj)
+			{
+				if (_lockDictionary.TryGetValue(elementToLock, out sem))
+					sem.WaitingThreads++;
+				else
+				{
+					sem = new SemaphoreSlimThCount(1, 1);
+					_lockDictionary.TryAdd(elementToLock, sem);
+				}
+			}
+			sem.Wait();
+		}
 
-        public bool Release(T elementToLock, bool remove = true)
-        {
-            if (_lockDictionary.TryGetValue(elementToLock, out var semaphore))
-            {
-                semaphore.Release();
-                if (remove)
-                    return _lockDictionary.TryRemove(elementToLock, out _);
-                return true;
-            }
-            else
-                return false;
-        }
-    }
+		public async Task WaitAsync(T elementToLock)
+		{
+			SemaphoreSlimThCount? sem;
+			lock (syncObj)
+			{
+				if (_lockDictionary.TryGetValue(elementToLock, out sem))
+					sem.WaitingThreads++;
+				else
+				{
+					sem = new SemaphoreSlimThCount(1, 1);
+					_lockDictionary.TryAdd(elementToLock, sem);
+				}
+			}
+			await sem.WaitAsync();
+		}
+
+		public bool Release(T elementToLock, bool remove = true)
+		{
+			SemaphoreSlimThCount? sem;
+			lock (syncObj)
+			{
+				if (_lockDictionary.TryGetValue(elementToLock, out sem))
+				{
+					sem.WaitingThreads--;
+					if (sem.WaitingThreads == 0)
+						_lockDictionary.Remove(elementToLock, out _);
+				}
+				else
+				{
+					return false;
+				}
+			}
+			sem.Release();
+			return true;
+		}
+	}
 }
