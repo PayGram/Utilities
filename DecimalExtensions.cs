@@ -4,14 +4,14 @@ namespace Utilities.Decimal.Extensions
 {
 	public static class DecimalExtensions
 	{
-		public static string ToString(this decimal amount, Currencies curr, bool appendCurrency=true)
+		public static string ToString(this decimal amount, Currencies curr, bool appendCurrency = true)
 		{
 			const string formatPhpLikeFiat = "#,##0.##"; // decimals are very little, almost non significant
 			const string formatUsdLikeFiat = "#,##0.00";
 			const string formatVndLikeFiat = "#,##0";
 			const string formatBtcLikeCrypto = "#,##0.##########";
 			string format;
-			switch(curr)
+			switch (curr)
 			{
 				case Currencies.PHP:
 				case Currencies.PHPT:

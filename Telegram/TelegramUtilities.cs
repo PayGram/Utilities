@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Telegram.Bot;
-using Telegram.Bot.Exceptions;
+﻿using System.Text;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Utilities.Telegram
@@ -168,6 +156,11 @@ namespace Utilities.Telegram
 			if (valuesLabels == null) return null;
 			return MakeReplyKeyboard(perRow, resize, selective, valuesLabels.SelectMany(x => new[] { x.Key, x.Value }).ToArray());
 		}
+		public static string? CreateLinkToUser(string tid, string? username = null, string? firstName = null)
+		{
+			if (long.TryParse(tid, out var ltid) == false) return null;
+			return CreateLinkToUser(ltid, username, firstName);
+		}
 		/// <summary>
 		/// returns a link with the html syntax <a href="">username or firstname</a>
 		/// </summary>
@@ -193,7 +186,7 @@ namespace Utilities.Telegram
 			if (firstName != null)
 				sb.Append(firstName);
 			if (username == null && firstName == null)
-				sb.Append("anonymous");
+				sb.Append(tid);
 			if (tid != 0)
 				sb.Append("</a>");
 			return sb.ToString();

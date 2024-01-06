@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Telegram.Bot.Types.ReplyMarkups;
-using Utilities.Telegram;
+﻿using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Utilities.Telegram
 {

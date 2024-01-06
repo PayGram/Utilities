@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.Design;
-using System.Runtime.CompilerServices;
-
-namespace Utilities.General
+﻿namespace Utilities.General
 {
 	public static class GeneralUtilities
 	{

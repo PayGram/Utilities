@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -50,7 +47,8 @@ namespace Utilities.String.Extentions
 		/// <returns></returns>
 		public static string Format(this string format, params object[] args)
 		{
-			if (string.IsNullOrWhiteSpace(format) || args == null || args.Length == 0)
+			if (string.IsNullOrWhiteSpace(format)) return string.Empty;
+			if (args == null || args.Length == 0)
 				return format;
 			try
 			{
@@ -58,12 +56,13 @@ namespace Utilities.String.Extentions
 			}
 			catch
 			{
-				return null;
+				return format;
 			}
 		}
 		public static string Format(this string format, IFormatProvider culture, params object[] args)
 		{
-			if (string.IsNullOrWhiteSpace(format) || args == null)
+			if (string.IsNullOrWhiteSpace(format)) return string.Empty;
+			if (args == null)
 				return format;
 			if (culture == null)
 				return format.Format(args);
@@ -73,7 +72,7 @@ namespace Utilities.String.Extentions
 			}
 			catch
 			{
-				return null;
+				return format;
 			}
 		}
 		/// <summary>
