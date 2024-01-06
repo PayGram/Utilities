@@ -4,6 +4,7 @@ using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.Payments;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -453,7 +454,28 @@ namespace Utilities.Telegram.Extentions
 				return false;
 			}
 		}
-
+		public static async Task<bool> AnswerInlineQueryNoThrowAsync(
+												this ITelegramBotClient botClient,
+												string inlineQueryId,
+												IEnumerable<InlineQueryResult> results,
+												int? cacheTime = default,
+												bool? isPersonal = default,
+												string? nextOffset = default,
+												string? switchPmText = default,
+												string? switchPmParameter = default,
+												CancellationToken cancellationToken = default)
+		{
+			try
+			{
+				await botClient.AnswerInlineQueryAsync(inlineQueryId, results, cacheTime, isPersonal, nextOffset, switchPmText, switchPmParameter, cancellationToken);
+				return true;
+			}
+			catch (Exception e)
+			{
+				log.Debug($"Answering callBackQueryId: {inlineQueryId}", e);
+				return false;
+			}
+		}
 		readonly static Dictionary<long, Dictionary<long, TelegramChatStatusDesc>> botsAndChats = new Dictionary<long, Dictionary<long, TelegramChatStatusDesc>>();
 		readonly static object sync = new object();
 		static TelegramChatStatusDesc? GetChat(ITelegramBotClient bot, long chatId)
