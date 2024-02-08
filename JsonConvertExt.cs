@@ -5,7 +5,7 @@ namespace Utilities.String.Json.Extentions
 {
 	public static class JsonConvertExt
 	{
-		public static string? SerializeIgnoreAndPopulate<T>(this T obj)
+		public static string? SerializeIgnoreAndPopulate<T>(this T? obj)
 		{
 			if (obj == null) return null;
 			var settings = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate };
@@ -30,7 +30,7 @@ namespace Utilities.String.Json.Extentions
 			}
 			return sb.ToString();
 		}
-		public static T? DeserializeObject<T>(this string value)
+		public static T? DeserializeObject<T>(this string? value)
 		{
 			if (string.IsNullOrWhiteSpace(value)) return default;
 			try
@@ -40,7 +40,7 @@ namespace Utilities.String.Json.Extentions
 			catch { return default; }
 		}
 
-		public static T? DeserializeObject<T>(this string value, JsonSerializerSettings settings)
+		public static T? DeserializeObject<T>(this string? value, JsonSerializerSettings settings)
 		{
 			if (string.IsNullOrWhiteSpace(value)) return default;
 			try
@@ -50,7 +50,7 @@ namespace Utilities.String.Json.Extentions
 			catch { return default; }
 		}
 
-		public static T? DeserializeObject<T>(this string value, JsonConverter[] converters)
+		public static T? DeserializeObject<T>(this string? value, JsonConverter[] converters)
 		{
 			if (string.IsNullOrWhiteSpace(value)) return default;
 			try
