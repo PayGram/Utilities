@@ -20,5 +20,33 @@
 				list[n] = value;
 			}
 		}
+		public static int MinOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, int> selector)
+		{
+			if (source == null || selector == null)
+			{
+				return default;
+			}
+
+			int value;
+			using (IEnumerator<TSource> e = source.GetEnumerator())
+			{
+				if (!e.MoveNext())
+				{
+					return default;
+				}
+
+				value = selector(e.Current);
+				while (e.MoveNext())
+				{
+					int x = selector(e.Current);
+					if (x < value)
+					{
+						value = x;
+					}
+				}
+			}
+
+			return value;
+		}
 	}
 }
