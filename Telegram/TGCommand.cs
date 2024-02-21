@@ -1,5 +1,5 @@
-﻿using Utilities.String.Extentions;
-
+﻿using Telegram.Bot.Types.Payments;
+using Utilities.String.Extentions;
 namespace Utilities.Telegram
 {
 	/// <summary>
