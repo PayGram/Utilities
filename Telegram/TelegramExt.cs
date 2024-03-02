@@ -139,12 +139,12 @@ namespace Utilities.Telegram.Extentions
 					return null;
 			}
 		}
-		public static async Task<Message?> SendHtmlMessage(this ITelegramBotClient bot, long chatId, string? text, int replyToMsgId = 0, IReplyMarkup markup = null, CancellationToken ct = default(CancellationToken))
+		public static async Task<Message?> SendHtmlMessage(this ITelegramBotClient bot, long chatId, string? text, int replyToMsgId = 0, IReplyMarkup markup = null, bool disableNotification = false, CancellationToken ct = default(CancellationToken))
 		{
 			if (bot == null) return null;
 			try
 			{
-				return await bot.SendTextMessageAsync(chatId, text, ParseMode.Html, disableWebPagePreview: true, disableNotification: false, replyToMessageId: replyToMsgId, replyMarkup: markup, cancellationToken: ct);
+				return await bot.SendTextMessageAsync(chatId, text, ParseMode.Html, disableWebPagePreview: true, disableNotification: disableNotification, replyToMessageId: replyToMsgId, replyMarkup: markup, cancellationToken: ct);
 			}
 			catch (Exception e)
 			{
