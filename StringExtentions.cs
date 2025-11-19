@@ -134,5 +134,26 @@ namespace Utilities.String.Extentions
 		{
 			return Regex.Replace(input, "<.*?>", string.Empty);
 		}
+		public static string EscapeMarkdown(this string text)
+		{
+			return text
+				.Replace("_", "\\_")
+				.Replace("*", "\\*")
+				.Replace("`", "\\`");
+		}
+
+		public static string EscapeMarkdownV2(this string text)
+		{
+			var charsToEscape = new[]
+			{
+				"_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+",
+				"-", "=", "|", "{", "}", ".", "!"
+			};
+
+			foreach (var c in charsToEscape)
+				text = text.Replace(c, "\\" + c);
+
+			return text;
+		}
 	}
 }
