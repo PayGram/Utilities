@@ -1,4 +1,5 @@
 ﻿using log4net;
+using System.Collections.Concurrent;
 using System.Net;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -476,8 +477,8 @@ namespace Utilities.Telegram.Extentions
 				return false;
 			}
 		}
-		readonly static Dictionary<long, Dictionary<long, TelegramChatStatusDesc>> botsAndChats = new Dictionary<long, Dictionary<long, TelegramChatStatusDesc>>();
-		readonly static object sync = new object();
+		readonly static ConcurrentDictionary<long, ConcurrentDictionary<long, TelegramChatStatusDesc>> botsAndChats = new ConcurrentDictionary<long, ConcurrentDictionary<long, TelegramChatStatusDesc>>();
+
 		static TelegramChatStatusDesc? GetChat(ITelegramBotClient bot, long chatId)
 		{
 			TelegramChatStatusDesc chat;
@@ -486,25 +487,10 @@ namespace Utilities.Telegram.Extentions
 				log.Debug($"{bot}, has null bot.BotId");
 				return null;
 			}
-			lock (sync)
-			{
-				Dictionary<long, TelegramChatStatusDesc> botChats;
-				if (botsAndChats.ContainsKey((long)bot.BotId) == false)
-				{
-					botChats = new Dictionary<long, TelegramChatStatusDesc>();
-					botsAndChats.Add((long)bot.BotId, botChats);
-				}
-				else
-					botChats = botsAndChats[(long)bot.BotId];
 
-				if (botChats.ContainsKey(chatId) == false)
-				{
-					chat = new TelegramChatStatusDesc(chatId);
-					botChats.Add(chatId, chat);
-				}
-				else
-					chat = botChats[chatId];
-			}
+			ConcurrentDictionary<long, TelegramChatStatusDesc> botChats = botsAndChats.GetOrAdd((long)bot.BotId, (k) => new ConcurrentDictionary<long, TelegramChatStatusDesc>());
+			chat = botChats.GetOrAdd(chatId, (k) => new TelegramChatStatusDesc(chatId));
+
 			return chat;
 		}
 	}

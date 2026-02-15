@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Concurrent;
+using System.Globalization;
 using System.Resources;
 using Utilities.String.Extentions;
 
@@ -7,7 +8,7 @@ namespace Utilities.Localization.Extentions
 	public static class LocalizationExtentions
 	{
 		static ResourceManager? mng;
-		readonly static Dictionary<string, CultureInfo> cultures = new Dictionary<string, CultureInfo>();
+		readonly static ConcurrentDictionary<string, CultureInfo> cultures = new ConcurrentDictionary<string, CultureInfo>();
 		readonly static object sync = new object();
 		/// <summary>
 		/// Gets or sets the resource manager used by Translate to localize
@@ -89,13 +90,7 @@ namespace Utilities.Localization.Extentions
 		static CultureInfo? GetOrAddCulture(string culture)
 		{
 			if (string.IsNullOrWhiteSpace(culture)) return null;
-			lock (sync)
-			{
-				if (cultures.ContainsKey(culture)) return cultures[culture];
-				var ci = new CultureInfo(culture);
-				cultures.Add(culture, ci);
-				return ci;
-			}
+			return cultures.GetOrAdd(culture, c => new CultureInfo(c));				 
 		}
 	}
 }
