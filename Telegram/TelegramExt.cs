@@ -1,4 +1,4 @@
-﻿using log4net;
+using log4net;
 using System.Collections.Concurrent;
 using System.Net;
 using Telegram.Bot;
@@ -149,7 +149,7 @@ namespace Utilities.Telegram.Extentions
 			}
 			catch (Exception e)
 			{
-				log.Debug($"Bot: {bot.BotId}, To: {chatId} - Error SendHtmlMessage", e);
+				log.Warn($"Bot: {bot.BotId}, To: {chatId} - Error SendHtmlMessage", e);
 				return null;
 			}
 		}
@@ -180,7 +180,7 @@ namespace Utilities.Telegram.Extentions
 			catch (Exception e)
 			{
 				desc.DeleteMessage = false;
-				log.Debug($"Bot: {bot.BotId}, To: {desc.ChatId} - Error SendPhotoAsync", e);
+				log.Warn($"Bot: {bot.BotId}, To: {desc.ChatId} - Error SendPhotoAsync", e);
 				return null;
 			}
 		}
@@ -266,7 +266,7 @@ namespace Utilities.Telegram.Extentions
 			catch (Exception e)
 			{
 				c.DeleteMessage = false;
-				log.Debug($"Bot: {bot.BotId}, to: {c.ChatId} - Error SendInvoiceAsync", e);
+				log.Warn($"Bot: {bot.BotId}, to: {c.ChatId} - Error SendInvoiceAsync", e);
 				return null;
 			}
 		}
@@ -307,11 +307,11 @@ namespace Utilities.Telegram.Extentions
 						if (ar.Message.Contains("message is not modified"))
 							return null;
 						else
-							log.Debug($"{desc}", ar);
+							log.Warn($"{desc}", ar);
 					}
 					catch (Exception ex)
 					{
-						log.Debug($"{desc}", ex);
+						log.Warn($"{desc}", ex);
 						desc.DeleteMessage = true;
 					}
 				if (desc.DeleteMessage)
@@ -337,7 +337,7 @@ namespace Utilities.Telegram.Extentions
 			}
 			catch (Exception e)
 			{
-				log.Debug($"Bot: {bot.BotId}, To: {desc.ChatId} - Error sending message", e);
+				log.Warn($"Bot: {bot.BotId}, To: {desc.ChatId} - Error sending message", e);
 				return null;
 			}
 		}
@@ -388,7 +388,7 @@ namespace Utilities.Telegram.Extentions
 			}
 			catch (Exception e)
 			{
-				log.Debug($"Bot: {bot.BotId}, To: {c.ChatId} - Error SendPhoto", e);
+				log.Warn($"Bot: {bot.BotId}, To: {c.ChatId} - Error SendPhoto", e);
 				return false;
 			}
 		}
@@ -416,7 +416,7 @@ namespace Utilities.Telegram.Extentions
 			}
 			catch (Exception e)
 			{
-				log.Debug($"Bot: {bot.BotId}, chafileIdtId: {fileId} - Error DownloadPhotoLocalAsync", e);
+				log.Warn($"Bot: {bot.BotId}, chafileIdtId: {fileId} - Error DownloadPhotoLocalAsync", e);
 				return null;
 			}
 		}
@@ -430,7 +430,7 @@ namespace Utilities.Telegram.Extentions
 			}
 			catch (Exception e)
 			{
-				log.Debug($"Bot: {bot.BotId}, chatId: {chatId}, msgId: {msgid}. last msg Id: {GetChat(bot, chatId)?.LastMessageId} - Error DeleteMessageIdAsync", e);
+				log.Warn($"Bot: {bot.BotId}, chatId: {chatId}, msgId: {msgid}. last msg Id: {GetChat(bot, chatId)?.LastMessageId} - Error DeleteMessageIdAsync", e);
 				return false;
 			}
 		}
@@ -451,7 +451,7 @@ namespace Utilities.Telegram.Extentions
 			}
 			catch (Exception e)
 			{
-				log.Debug($"Answering callBackQueryId: {callBackQueryId}", e);
+				log.Warn($"Answering callBackQueryId: {callBackQueryId}", e);
 				return false;
 			}
 		}
@@ -473,7 +473,7 @@ namespace Utilities.Telegram.Extentions
 			}
 			catch (Exception e)
 			{
-				log.Debug($"Answering callBackQueryId: {inlineQueryId}", e);
+				log.Warn($"Answering callBackQueryId: {inlineQueryId}", e);
 				return false;
 			}
 		}
