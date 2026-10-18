@@ -8,8 +8,7 @@ namespace Utilities.String.Json.Extentions
 		public static string? SerializeIgnoreAndPopulate<T>(this T? obj)
 		{
 			if (obj == null) return null;
-			var settings = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate };
-			return JsonConvert.SerializeObject(obj, Formatting.None, settings);
+			return JsonConvert.SerializeObject(obj, Formatting.None, JsonDefaults.StorageCompact);
 		}
 
 		public static string? Stringify<T>(this T obj)
@@ -35,7 +34,7 @@ namespace Utilities.String.Json.Extentions
 			if (string.IsNullOrWhiteSpace(value)) return default;
 			try
 			{
-				return JsonConvert.DeserializeObject<T>(value, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate });
+				return JsonConvert.DeserializeObject<T>(value, JsonDefaults.Storage);
 			}
 			catch { return default; }
 		}
