@@ -55,8 +55,10 @@ namespace Utilities.String.Json.Extentions
 
 		/// <summary>
 		/// The body of the callbacks pushed to merchants and users: camelCase names, everything written (nulls and defaults
-		/// included), dates in UTC with "Z" (<see cref="WithUtcDates"/>: the callbacks always carried UTC dates, the bytes are
-		/// the same). The X-PayGram-Signature hmac covers exactly these bytes.
+		/// included), dates in UTC with "Z" (<see cref="WithUtcDates"/>). The dates built as Utc (DateUtc, the expired and
+		/// most others) keep their bytes; the report-ready callbacks (CallbackType 6) stored their ReportInfo FromUtc /
+		/// ToExcludingUtc without zone and now carry the "Z", same clock time. The X-PayGram-Signature hmac covers exactly
+		/// these bytes.
 		/// </summary>
 		public static JsonSerializerSettings CallbackWire => new JsonSerializerSettings()
 		{
